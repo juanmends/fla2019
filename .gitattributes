@@ -1,0 +1,2 @@
+TransferenciasFutebol/*.csv filter=lfs diff=lfs merge=lfs -text
+CampeonatoBrasileiro/*.csv filter=lfs diff=lfs merge=lfs -text
