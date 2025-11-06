@@ -34,13 +34,14 @@ df_transferencias_entrada = df_transferencias_entrada.loc[df_transferencias_entr
 
 df_elenco = df_jogadores.loc[df_jogadores["id"].isin(ids_jogadores)].copy()
 
-#JOGADORES SEM TAXA!
-transfer_jogadores_sem_taxa = df_transferencias_entrada[df_transferencias_entrada["transfer_fee"] == 0]
-jogadores_sem_taxa =  df_elenco[df_elenco["id"].isin(transfer_jogadores_sem_taxa["player_id"])]
+#REMOVE COMPRA DO GABIGOL NO FINAL DA TEMPORADA, CONSIDERA SOMENTE SEU EMPRÉSTIMO
+idx = df_transferencias_entrada.index[df_transferencias_entrada["player_id"] == 244275][1]
+df_transferencias_entrada = df_transferencias_entrada.drop(idx)
 
-#JOGADORES COM TAXA!
-transfer_jogadores_com_taxa = df_transferencias_entrada[df_transferencias_entrada["transfer_fee"] > 0]
-jogadores_com_taxa = df_elenco[df_elenco["id"].isin(transfer_jogadores_com_taxa["player_id"])]
+#ADIÇÃO COLUNA DE TAXAS
+df_elenco["taxa_transferencia"] = (df_elenco["id"].map(df_transferencias_entrada.set_index("player_id")["transfer_fee"]))
+df_elenco = df_elenco.reset_index()
+print(df_elenco)
 
 #JOGOS NO BRASILEIRO
 df_jogos_brasileiro["ano"] = pd.to_datetime(df_jogos_brasileiro["data"], format="%d/%m/%Y").dt.year
@@ -60,7 +61,7 @@ df_gols = df_gols[df_gols["clube"] == TIME_STRING]
 #GOLS JOGADORES COM TAXA
 
 
-print(df_gols)
+# print(df_gols)
 
 # print(jogos_mandante_vencidos)
 # print("\n")
